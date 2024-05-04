@@ -1,0 +1,38 @@
+import os
+import time
+import pandas as pd    
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+# Initialize WebDriver
+driver = webdriver.Chrome()
+
+# Load the webpage
+driver.get("https://www.youtube.com/hashtag/trend/shorts")            
+
+# Wait for the page to load
+WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, '//*[@id="dismissible"]/ytd-thumbnail')))
+
+# Find all individual post elements using the ytd-reel-video-renderer tag
+post_elements = driver.find_elements(By.XPATH, '//*[@id="dismissible"]/ytd-thumbnail')
+
+# Extract URLs for each post
+post_urls = []
+for post_element in post_elements:
+    # Find the anchor tag within the ytd-reel-video-renderer
+    anchor_element = post_element.find_element(By.CSS_SELECTOR, "a")
+    # Extract the href attribute from the anchor tag
+    post_url = anchor_element.get_attribute("href")
+    post_urls.append(post_url)
+
+# Print the extracted URLs
+for url in post_urls:
+    print(url)
+
+# Close the WebDriver
+driver.quit()
+
+# Delay execution for demonstration purposes
+time.sleep(100)
